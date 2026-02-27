@@ -12,7 +12,7 @@ export default function IngredientDetail() {
       const hash = window.location.hash || '#/'
       const match = hash.match(/^#\/user\/ingredients\/([^?#]+)/)
       const ingredientId = match?.[1]
-      
+       
       if (!ingredientId) {
         setLoading(false)
         return

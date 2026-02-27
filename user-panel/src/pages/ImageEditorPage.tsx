@@ -8,7 +8,7 @@ interface EditContext {
   source: string
   editingImageId: string | null
   editingImageName: string
-}
+} 
 
 export default function ImageEditorPage() {
   const [ctx, setCtx] = useState<EditContext | null>(null)

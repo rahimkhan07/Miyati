@@ -14,11 +14,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false
       },
-      // '/IMAGES': {
-      //   target: process.env.VITE_API_URL || `http://${process.env.VITE_BACKEND_HOST || 'localhost'}:${process.env.VITE_BACKEND_PORT || '2000'}`,
-      //   changeOrigin: true,
-      //   secure: false
-      // }
+      '/IMAGES': {
+        target: process.env.VITE_API_URL || `http://${process.env.VITE_BACKEND_HOST || 'localhost'}:${process.env.VITE_BACKEND_PORT || '2000'}`,
+        changeOrigin: true,
+        secure: false
+      }
     },
     allowedHosts: [
       'localhost',
