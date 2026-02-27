@@ -142,78 +142,99 @@ export default function Body() {
           ) : (
             <>
               {products.map((product) => (
-                <article
+               <article
   key={product.slug}
-  className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col"
+  className="group bg-[#f3f3f3] rounded-lg overflow-hidden flex flex-col 
+             h-full transition-all duration-300 hover:shadow-lg
+             max-w-[380px] w-full mx-auto"
 >
-  {/* Image Section */}
-  <div className="relative overflow-hidden aspect-square">
+  {/* IMAGE BOX */}
+  <div className="relative bg-white h-[200px] mt-[15px] flex items-center justify-center overflow-hidden">
 
-    {/* Product Image */}
-    <a href={`#/user/product/${product.slug}`}>
-      <img
-        src={product.list_image || '/IMAGES/BANNER (1).webp'}
-        alt={product.title}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        loading="lazy"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement
-          target.src = '/IMAGES/BANNER (1).webp'
-        }}
-      />
+    {/* PRODUCT IMAGE */}
+    <a
+      href={`#/user/product/${product.slug}`}
+      className="w-full h-full flex items-center justify-center p-6"
+    >
+      {product.list_image && (
+        <img
+          src={product.list_image || '/IMAGES/BANNER (1).webp'}
+          alt={product.title}
+          className="max-h-full object-contain transition-transform duration-500 group-hover:scale-105"
+          loading="lazy"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement
+            target.src = '/IMAGES/BANNER (1).webp'
+          }}
+        />
+      )}
     </a>
 
-    {/* Overlay */}
-    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    {/* DARK OVERLAY (ON HOVER) */}
+    <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition duration-300" />
 
-    {/* Floating Icons */}
-    <div className="absolute top-4 right-4 flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-      
-      {/* View Icon */}
+    {/* RIGHT ICONS (HIDDEN → SHOW ON HOVER) */}
+    <div className="absolute top-5 right-4 flex flex-col gap-4 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 z-20">
+
+      {/* VIEW ICON */}
       <a
         href={`#/user/product/${product.slug}`}
-        className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow hover:bg-gray-100 transition"
+        className="w-11 h-11 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100 transition"
       >
-        👁
+        <svg className="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+            d="M2.25 12s3.75-7.5 9.75-7.5S21.75 12 21.75 12 18 19.5 12 19.5 2.25 12 2.25 12z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
       </a>
 
-      {/* Wishlist */}
-      <div className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow hover:bg-gray-100 transition">
+      {/* WISHLIST */}
+      <div className="w-11 h-11 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-100 transition">
         <WishlistButton productId={product.id!} />
       </div>
+
     </div>
 
-    {/* Center Add To Cart */}
-    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+    {/* ADD TO CART BUTTON (HIDDEN → SHOW ON HOVER) */}
+    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20">
       <button
         onClick={(e) => {
           e.stopPropagation()
           if (addItem) {
-            addItem({
-              id: product.id,
-              slug: product.slug,
-              title: product.title,
-              category: product.category,
-              price: product.price,
-              listImage: product.list_image,
-              pdpImages: [],
-              description: product.description
-            })
+            try {
+              addItem({
+                id: product.id,
+                slug: product.slug,
+                title: product.title,
+                category: product.category,
+                price: product.price,
+                listImage: product.list_image,
+                pdpImages: [],
+                description: product.description
+              })
+            } catch (error) {
+              console.log('Authentication required for cart operation')
+            }
           }
         }}
-        className="px-8 py-3 bg-blue-600 text-white rounded-full text-sm font-medium shadow-lg hover:bg-blue-700 transition"
+        className="px-19 p-1 w-[25vh] py-5 bg-blue-600 text-white rounded-full text-sm font-medium shadow-lg hover:bg-blue-700 transition"
       >
         Add To Cart
       </button>
     </div>
   </div>
 
-  {/* Product Info */}
-  <div className="p-5 flex flex-col flex-grow text-center">
+  {/* PRODUCT INFO */}
+  <div className="flex flex-col flex-grow px-5 py-4 text-center">
+    <p className="text-xs uppercase text-gray-400 tracking-widest mb-2">
+      {product.category}
+    </p>
 
-    <h3 className="text-lg font-semibold tracking-wide mb-2 line-clamp-2">
-      {product.title}
-    </h3>
+    <a href={`#/user/product/${product.slug}`}>
+      <h3 className="text-lg font-medium text-gray-800 mb-2 line-clamp-2">
+        {product.title}
+      </h3>
+    </a>
 
     <div className="mt-auto">
       <PricingDisplay product={product} csvProduct={undefined} />
