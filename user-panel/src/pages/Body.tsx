@@ -142,140 +142,84 @@ export default function Body() {
           ) : (
             <>
               {products.map((product) => (
-                <article 
-                  key={product.slug} 
-                  className="bg-white group overflow-hidden flex flex-col h-full transition-all duration-500"
-                >
-                  <div className="relative overflow-hidden aspect-square mb-6 rounded-xl">
-                    <a href={`#/user/product/${product.slug}`}>
-                      {product.list_image && (
-                        <img 
-                          src={product.list_image || '/IMAGES/BANNER (1).webp'} 
-                          alt={product.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 rounded-xl" 
-                          loading="lazy"
-                          style={{ aspectRatio: '1 / 1' }}
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.src = '/IMAGES/BANNER (1).webp'
-                          }}
-                        />
-                      )}
-                    </a>
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                      <WishlistButton
-  productId={product.id!}
-  className="absolute top-4 right-4 z-50 opacity-0 group-hover:opacity-100"
-/>
+                <article
+  key={product.slug}
+  className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col"
+>
+  {/* Image Section */}
+  <div className="relative overflow-hidden aspect-square">
 
-                    </div>
-                  </div>
-                  <div className="flex flex-col flex-grow px-2">
-                    <a href={`#/user/product/${product.slug}`} className="block">
-                      <h3 className="text-lg sm:text-xl font-semibold tracking-wide mb-1 line-clamp-2 overflow-hidden hover:opacity-70 transition-opacity cursor-pointer" style={{color: '#1a1a1a', letterSpacing: '0.05em', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', maxHeight: '3.5rem'}}>
-                        {product.title}
-                      </h3>
-                    </a>
-                    {/* Subtitle */}
-                    {(() => {
-                      const csvMatch = csvProducts?.find((csv: any) => {
-                        const csvSlug = csv['Slug'] || csv['Product Name']?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || ''
-                        return csvSlug === product.slug
-                      })
-                      const subtitle = csvMatch?.['Subtitle / Tagline'] || 
-                                       (product.details && typeof product.details === 'object' ? product.details.subtitle : null) ||
-                                       (product.details && typeof product.details === 'string' ? JSON.parse(product.details)?.subtitle : null)
-                      return subtitle ? (
-                        <p className="text-sm text-gray-600 mb-1 line-clamp-2" style={{color: '#666', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>
-                          {subtitle}
-                        </p>
-                      ) : null
-                    })()}
-                    {(() => {
-                      const rating = getProductRating(product.slug || '')
-                      const reviewCount = getProductReviewCount(product.slug || '')
-                      if (rating > 0) {
-                        return (
-                          <div className="flex items-center mb-2">
-                            <div className="flex text-yellow-400">
-                              {[...Array(5)].map((_, i) => {
-                                const filled = i < Math.round(rating)
-                                return (
-                                  <svg key={i} className={`w-4 h-4 ${filled ? 'text-yellow-400' : 'text-gray-300'}`} fill={filled ? 'currentColor' : 'none'} stroke={filled ? 'none' : 'currentColor'} viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                  </svg>
-                                )
-                              })}
-                            </div>
-                            <span className="text-xs sm:text-sm ml-2 font-light" style={{color: '#999'}}>{rating.toFixed(1)} ({reviewCount})</span>
-                            {hasVerifiedReviews(product.slug || '') && (
-                              <VerifiedBadge size="sm" className="ml-1.5" />
-                            )}
-                          </div>
-                        )
-                      }
-                      return null
-                    })()}
-                    <div className="mt-auto pt-2">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex flex-col">
-                          <PricingDisplay 
-                            product={product} 
-                            csvProduct={undefined}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            if (addItem) {
-                              try {
-                                addItem({
-                                  id: product.id,
-                                  slug: product.slug,
-                                  title: product.title,
-                                  category: product.category,
-                                  price: product.price,
-                                  listImage: product.list_image,
-                                  pdpImages: [],
-                                  description: product.description
-                                })
-                              } catch (error) {
-                                console.log('Authentication required for cart operation')
-                              }
-                            }
-                          }}
-                          className="flex-1 px-6 py-3 text-white text-xs font-light transition-all duration-300 tracking-[0.15em] uppercase border border-transparent hover:border-slate-900 rounded-xl"
-                          style={{
-                            backgroundColor: 'rgb(75,151,201)',
-                            color: '#FFFFFF',
-                            minHeight: '44px',
-                            letterSpacing: '0.15em'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgb(60,120,160)'
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgb(75,151,201)'
-                          }}
-                        >
-                          Add to Cart
-                        </button>
-                        <a 
-                          href={`#/user/product/${product.slug}`}
-                          className="flex-1 px-6 py-3 text-slate-900 text-xs font-light transition-all duration-300 tracking-[0.15em] uppercase text-center flex items-center justify-center border border-slate-900 hover:bg-slate-900 hover:text-white rounded-xl"
-                          style={{
-                            minHeight: '44px',
-                            letterSpacing: '0.15em'
-                          }}
-                        >
-                          View
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </article>
+    {/* Product Image */}
+    <a href={`#/user/product/${product.slug}`}>
+      <img
+        src={product.list_image || '/IMAGES/BANNER (1).webp'}
+        alt={product.title}
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        loading="lazy"
+        onError={(e) => {
+          const target = e.target as HTMLImageElement
+          target.src = '/IMAGES/BANNER (1).webp'
+        }}
+      />
+    </a>
+
+    {/* Overlay */}
+    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+    {/* Floating Icons */}
+    <div className="absolute top-4 right-4 flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+      
+      {/* View Icon */}
+      <a
+        href={`#/user/product/${product.slug}`}
+        className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow hover:bg-gray-100 transition"
+      >
+        👁
+      </a>
+
+      {/* Wishlist */}
+      <div className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow hover:bg-gray-100 transition">
+        <WishlistButton productId={product.id!} />
+      </div>
+    </div>
+
+    {/* Center Add To Cart */}
+    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          if (addItem) {
+            addItem({
+              id: product.id,
+              slug: product.slug,
+              title: product.title,
+              category: product.category,
+              price: product.price,
+              listImage: product.list_image,
+              pdpImages: [],
+              description: product.description
+            })
+          }
+        }}
+        className="px-8 py-3 bg-blue-600 text-white rounded-full text-sm font-medium shadow-lg hover:bg-blue-700 transition"
+      >
+        Add To Cart
+      </button>
+    </div>
+  </div>
+
+  {/* Product Info */}
+  <div className="p-5 flex flex-col flex-grow text-center">
+
+    <h3 className="text-lg font-semibold tracking-wide mb-2 line-clamp-2">
+      {product.title}
+    </h3>
+
+    <div className="mt-auto">
+      <PricingDisplay product={product} csvProduct={undefined} />
+    </div>
+  </div>
+</article>
               ))}
             </>
           )}
