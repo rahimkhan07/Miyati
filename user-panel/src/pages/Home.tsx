@@ -23,6 +23,7 @@ import VerifiedBadge from "../components/VerifiedBadge";
 import { getSessionId } from "../utils/session";
 import { getApiBase } from "../utils/apiBase";
 import WishlistButton from "../components/WishlistButton";
+import HotDeals from "../components/HotDeals";
 
 // Social Media Videos Component with auto-slide in horizontal line
 const SocialMediaVideos: React.FC<{
@@ -475,6 +476,9 @@ const SocialMediaVideos: React.FC<{
     </>
   );
 };
+
+
+
 
 export default function Home() {
   const { items: products, loading: productsLoading } = useProducts();
@@ -1244,6 +1248,21 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* ==================Hot Deals======================= */}
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+        <h1
+          className="text-5xl sm:text-5xl text-[white] font-normal text-center"
+          style={{ fontFamily: "'Great Vibes', cursive", textAlign:"center", marginRight:"2vh", backgroundColor:"#4f8fb8", padding:"4vh", borderRadius:"2vh"}}
+        >
+          Hot Deals <br/> will be end soon
+
+        </h1>
+        <HotDeals />
+        <HotDeals />
+        <HotDeals />
+      </div>
+
 
       {/* What's Just Landed Section - neudeskin.com style */}
       <section className="py-8 sm:py-12 md:py-16">
